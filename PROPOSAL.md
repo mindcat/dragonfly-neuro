@@ -33,10 +33,10 @@ Planning an outline (?)
 Writing report
 
 ## References/Sources
-Lessons from a dragonfly brain: https://spectrum.ieee.org/fast-efficient-neural-networks-copy-dragonfly-brains
-Wireless recordings from dragonfly target detecting neurons during prey interception flight: https://www.biorxiv.org/content/10.1101/2024.11.12.622977v1.full
-HiFly-Dragon: A Dragonfly Inspired Flapping Flying Robot with Modified, Resonant, Direct-Driven Flapping Mechanisms: https://www.mdpi.com/2504-446X/8/4/126
-A CNN-based neuromorphic model for classification and decision control: https://link.springer.com/article/10.1007/s11071-018-4673-4
-Interception from a Dragonfly Neural Network Model: https://dl.acm.org/doi/10.1145/3407197.3407218 
+- [Lessons from a dragonfly brain](https://spectrum.ieee.org/fast-efficient-neural-networks-copy-dragonfly-brains)
+- [Wireless recordings from dragonfly target detecting neurons during prey interception flight](https://www.biorxiv.org/content/10.1101/2024.11.12.622977v1.full)
+- [HiFly-Dragon: A Dragonfly Inspired Flapping Flying Robot with Modified, Resonant, Direct-Driven Flapping Mechanisms](https://www.mdpi.com/2504-446X/8/4/126)
+- [A CNN-based neuromorphic model for classification and decision control](https://link.springer.com/article/10.1007/s11071-018-4673-4)
+- [Interception from a Dragonfly Neural Network Model](https://dl.acm.org/doi/10.1145/3407197.3407218)
 
 
