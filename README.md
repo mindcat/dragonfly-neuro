@@ -12,3 +12,4 @@ Final project for Neuromorphic Computing (CMPE-789).
 
 ## links
 [Akida API Reference](https://doc.brainchipinc.com/index.html)
+[CNN to SNN with QuantizeML](https://doc.brainchipinc.com/user_guide/quantizeml.html#)
