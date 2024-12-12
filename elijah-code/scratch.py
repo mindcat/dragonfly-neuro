@@ -20,32 +20,38 @@ def generate_prey_trajectory(type='linear', start=None, length=3, max_bounds=5):
     Returns:
     - prey_trajectory: numpy array of shape (T, 3) with prey coordinates over time
     """
-    if start is None:
-        start = np.random.uniform(1, 4, size=3)
-    
-    if type == 'linear':
-        direction = np.random.uniform(-1, 1, size=3)
-        direction /= np.linalg.norm(direction)  # Normalize direction
-        end = start + direction * length
-        end = np.clip(end, 0, max_bounds)
-        prey_trajectory = np.linspace(start, end, num=50)
-    
-    elif type == 'parabolic':
-        t = np.linspace(0, 1, num=50)
-        direction = np.random.uniform(-1, 1, size=3)
-        direction /= np.linalg.norm(direction)  # Normalize direction
-        end = start + direction * length
-        end = np.clip(end, 0, max_bounds)
-        a = (end - start) / (t[-1]**2)
-        prey_trajectory = start + a * t[:, np.newaxis]**2
-    
-    # Ensure the trajectory is within bounds and at least 3 meters in length
-    # distances = np.linalg.norm(np.diff(prey_trajectory, axis=0), axis=1)
-    # total_distance = np.cumsum(distances)
-    # if total_distance[-1] < length:
-    #     raise ValueError("Generated trajectory is less than the required length.")
-    
-    # prey_trajectory = prey_trajectory[total_distance <= length]
+    cont = True
+    while cont:
+        try:
+            if start is None:
+                start = np.random.uniform(1, 4, size=3)
+            
+            if type == 'linear':
+                direction = np.random.uniform(-1, 1, size=3)
+                direction /= np.linalg.norm(direction)  # Normalize direction
+                end = start + direction * length
+                end = np.clip(end, 0, max_bounds)
+                prey_trajectory = np.linspace(start, end, num=50)
+            
+            elif type == 'parabolic':
+                t = np.linspace(0, 1, num=50)
+                direction = np.random.uniform(-1, 1, size=3)
+                direction /= np.linalg.norm(direction)  # Normalize direction
+                end = start + direction * length
+                end = np.clip(end, 0, max_bounds)
+                a = (end - start) / (t[-1]**2)
+                prey_trajectory = start + a * t[:, np.newaxis]**2
+            
+            # Ensure the trajectory is within bounds and at least 3 meters in length
+            distances = np.linalg.norm(np.diff(prey_trajectory, axis=0), axis=1)
+            total_distance = np.cumsum(distances)
+            if total_distance[-1] < length:
+                raise ValueError("Generated trajectory is less than the required length.")
+            
+            prey_trajectory = prey_trajectory[np.insert(total_distance <= length, 0, True)]
+            cont = False
+        except ValueError:
+            cont = True
     
     return prey_trajectory
 
@@ -91,6 +97,43 @@ def calculate_fov(dragonfly_heading, dragonfly_pos, prey_pos, fov_size=21, fov_a
     
     return fov
 
+# brains:
+
+def brain_classic_direct(fov):
+    """
+    Determine the pitch and yaw adjustments to center the largest index in the FOV.
+    
+    Parameters:
+    - fov: 2D numpy array representing the field of view
+    
+    Returns:
+    - (pitch, yaw): tuple where pitch and yaw are either 1, 0, or -1
+    """
+    fov_size = fov.shape[0]
+    center = fov_size // 2
+    
+    # Find the indices of the maximum value in the FOV
+    max_index = np.unravel_index(np.argmax(fov), fov.shape)
+    max_i, max_j = max_index
+    
+    # Determine pitch adjustment
+    if max_i < center:
+        pitch = -1
+    elif max_i > center:
+        pitch = 1
+    else:
+        pitch = 0
+    
+    # Determine yaw adjustment
+    if max_j < center:
+        yaw = -1
+    elif max_j > center:
+        yaw = 1
+    else:
+        yaw = 0
+    
+    return (pitch, yaw)
+
 class Scenario:
     def __init__(self, prey_trajectory, initial_dragonfly_pos, initial_dragonfly_heading):
         """
@@ -133,9 +176,30 @@ class Scenario:
             return True
         
         return None
+    
+    # controls
 
+    def pitch_up(self, angle=np.pi/12):
+        theta, phi = self.dragonfly_heading
+        theta = np.clip(theta + angle, 0, np.pi)
+        self.dragonfly_heading = np.array([theta, phi])
+    
+    def pitch_down(self, angle=np.pi/12):
+        theta, phi = self.dragonfly_heading
+        theta = np.clip(theta - angle, 0, np.pi)
+        self.dragonfly_heading = np.array([theta, phi])
+
+    def yaw_left(self, angle=np.pi/12):
+        theta, phi = self.dragonfly_heading
+        phi = (phi - angle) % (2 * np.pi)
+        self.dragonfly_heading = np.array([theta, phi])
+
+    def yaw_right(self, angle=np.pi/12):
+        theta, phi = self.dragonfly_heading
+        phi = (phi + angle) % (2 * np.pi)
+        self.dragonfly_heading = np.array([theta, phi])
         
-    def plot_scenario(self):
+    def plot_scenario_anim(self, brain=None):
         fig = plt.figure(figsize=(15, 8))
         ax3d = fig.add_subplot(121, projection='3d')
         ax2d = fig.add_subplot(122)
@@ -149,14 +213,14 @@ class Scenario:
                 return
             
             # Scatter plot for dragonfly trajectory
-            ax3d.scatter(self.dragonfly_trajectory[:, 0], self.dragonfly_trajectory[:, 1], self.dragonfly_trajectory[:, 2], color='blue', s=10, label='Dragonfly Trajectory')
+            ax3d.scatter(self.dragonfly_trajectory[:, 0], self.dragonfly_trajectory[:, 1], self.dragonfly_trajectory[:, 2], color='lightcoral', s=10, label='Dragonfly Trajectory')
             
             # Scatter plot for prey trajectory
-            ax3d.scatter(self.prey_trajectory[:self.time+1, 0], self.prey_trajectory[:self.time+1, 1], self.prey_trajectory[:self.time+1, 2], color='green', s=10, label='Prey Trajectory')
+            ax3d.scatter(self.prey_trajectory[:self.time+1, 0], self.prey_trajectory[:self.time+1, 1], self.prey_trajectory[:self.time+1, 2], color='gray', s=10, label='Prey Trajectory')
             
             # Scatter plot for current positions
-            ax3d.scatter(self.dragonfly_pos[0], self.dragonfly_pos[1], self.dragonfly_pos[2], color='red', s=100, label=f'Dragonfly Position ({self.dragonfly_pos[0]:.2f}, {self.dragonfly_pos[1]:.2f}, {self.dragonfly_pos[2]:.2f})')
-            ax3d.scatter(self.prey_trajectory[self.time, 0], self.prey_trajectory[self.time, 1], self.prey_trajectory[self.time, 2], color='orange', s=100, label=f'Prey Position ({self.prey_trajectory[self.time, 0]:.2f}, {self.prey_trajectory[self.time, 1]:.2f}, {self.prey_trajectory[self.time, 2]:.2f})')
+            ax3d.scatter(self.dragonfly_pos[0], self.dragonfly_pos[1], self.dragonfly_pos[2], color='orangered', s=50, label=f'Dragonfly Position ({self.dragonfly_pos[0]:.2f}, {self.dragonfly_pos[1]:.2f}, {self.dragonfly_pos[2]:.2f})')
+            ax3d.scatter(self.prey_trajectory[self.time, 0], self.prey_trajectory[self.time, 1], self.prey_trajectory[self.time, 2], color='black', s=25, label=f'Prey Position ({self.prey_trajectory[self.time, 0]:.2f}, {self.prey_trajectory[self.time, 1]:.2f}, {self.prey_trajectory[self.time, 2]:.2f})')
             
             # Line between dragonfly and prey
             line_x = [self.dragonfly_pos[0], self.prey_trajectory[self.time, 0]]
@@ -168,7 +232,7 @@ class Scenario:
             dx = np.sin(theta) * np.cos(phi)
             dy = np.sin(theta) * np.sin(phi)
             dz = np.cos(theta)
-            ax3d.quiver(self.dragonfly_pos[0], self.dragonfly_pos[1], self.dragonfly_pos[2], dx, dy, dz, length=0.5, color='red')
+            ax3d.quiver(self.dragonfly_pos[0], self.dragonfly_pos[1], self.dragonfly_pos[2], dx, dy, dz, length=0.5, color='orangered')
             
             ax3d.set_xlim(0, 5)
             ax3d.set_ylim(0, 5)
@@ -181,7 +245,7 @@ class Scenario:
             
             # Calculate and plot FOV heatmap
             fov = calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time])
-            ax2d.imshow(fov, cmap='hot', interpolation='nearest')
+            ax2d.imshow(fov, cmap='Blues', interpolation='nearest')
             ax2d.set_title('Dragonfly FOV')
             ax2d.set_xlabel('Phi')
             ax2d.set_ylabel('Theta')
@@ -205,7 +269,7 @@ if __name__ == "__main__":
     
     # Create scenario
     scenario = Scenario(prey_traj, initial_pos, initial_heading)
-    scenario.plot_scenario()
+    scenario.plot_scenario_anim()
     
     # Run and plot several time steps
     # for _ in range(100):
