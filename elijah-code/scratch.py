@@ -135,7 +135,7 @@ def brain_classic_direct(fov):
     return (pitch, yaw)
 
 class Scenario:
-    def __init__(self, prey_trajectory, initial_dragonfly_pos, initial_dragonfly_heading):
+    def __init__(self, prey_trajectory, initial_dragonfly_pos, initial_dragonfly_heading, brain=brain_classic_direct):
         """
         Initialize a scenario with prey trajectory and dragonfly parameters.
         
@@ -146,6 +146,8 @@ class Scenario:
         """
         self.prey_trajectory = prey_trajectory
         self.time = 0
+
+        self.brain = brain
         
         # Dragonfly initial state
         self.dragonfly_pos = initial_dragonfly_pos
@@ -178,6 +180,16 @@ class Scenario:
         return None
     
     # controls
+    def change_heading(self, pitch_yaw_tuple):
+        pitch, yaw = pitch_yaw_tuple
+        if pitch == 1:
+            self.pitch_up()
+        elif pitch == -1:
+            self.pitch_down()
+        if yaw == 1:
+            self.yaw_right()
+        elif yaw == -1:
+            self.yaw_left()
 
     def pitch_up(self, angle=np.pi/12):
         theta, phi = self.dragonfly_heading
@@ -211,6 +223,7 @@ class Scenario:
             if result is not None:
                 ani.event_source.stop()
                 return
+            self.change_heading(self.brain(calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time])))
             
             # Scatter plot for dragonfly trajectory
             ax3d.scatter(self.dragonfly_trajectory[:, 0], self.dragonfly_trajectory[:, 1], self.dragonfly_trajectory[:, 2], color='lightcoral', s=10, label='Dragonfly Trajectory')
