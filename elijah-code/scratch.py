@@ -1,4 +1,5 @@
 import numpy as np
+import random as rd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.animation import FuncAnimation
@@ -6,8 +7,11 @@ from matplotlib.animation import FuncAnimation
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = ['Times New Roman']
 
+# Constants
+NOISE = 0.05
+
 # helper functions:
-def generate_prey_trajectory(type='linear', start=None, length=3, max_bounds=5):
+def generate_prey_trajectory(type='linear', start=None, length=4, max_bounds=5, numsize = 50):
     """
     Generate a prey trajectory.
     
@@ -31,10 +35,10 @@ def generate_prey_trajectory(type='linear', start=None, length=3, max_bounds=5):
                 direction /= np.linalg.norm(direction)  # Normalize direction
                 end = start + direction * length
                 end = np.clip(end, 0, max_bounds)
-                prey_trajectory = np.linspace(start, end, num=50)
+                prey_trajectory = np.linspace(start, end, numsize)
             
             elif type == 'parabolic':
-                t = np.linspace(0, 1, num=50)
+                t = np.linspace(0, 1, numsize)
                 direction = np.random.uniform(-1, 1, size=3)
                 direction /= np.linalg.norm(direction)  # Normalize direction
                 end = start + direction * length
@@ -89,11 +93,25 @@ def calculate_fov(dragonfly_heading, dragonfly_pos, prey_pos, fov_size=21, fov_a
     # Normalize the angles to be within the FOV
     if np.abs(delta_theta) <= fov_angle / 2 and np.abs(delta_phi) <= fov_angle / 2:
         # Map the angles to the FOV array indices
-        i = int((delta_theta + fov_angle / 2) / fov_angle * (fov_size - 1))
-        j = int((delta_phi + fov_angle / 2) / fov_angle * (fov_size - 1))
+        i_center = int((delta_theta + fov_angle / 2) / fov_angle * (fov_size - 1))
+        j_center = int((delta_phi + fov_angle / 2) / fov_angle * (fov_size - 1))
         
-        # Update the FOV array to indicate the presence of prey
-        fov[i, j] += 1
+        # Determine intensity based on distance
+        intensity = max(0.1, min(1, 1 - (r / 5)))
+        
+        # Spread the intensity across multiple indices
+        spread = max(1, int((1 - r / 5) * (fov_size // 4)))
+        # print(spread)
+        for di in range(-spread, spread + 1):
+            for dj in range(-spread, spread + 1):
+                i = i_center + di 
+                j = j_center + dj
+                if 0 <= i < fov_size and 0 <= j < fov_size:
+                    distance_factor = max(0, 1 - (np.sqrt(di**2 + dj**2) / spread))
+                    fov[i, j] += intensity * distance_factor
+    
+    # add noise (only up to ) to fov: 
+    fov += np.random.normal(0, NOISE, fov.shape)
     
     return fov
 
@@ -156,7 +174,7 @@ class Scenario:
         # Initialize dragonfly trajectory with starting position
         self.dragonfly_trajectory = np.array([initial_dragonfly_pos])
     
-    def timestep(self, speed=0.1):
+    def timestep(self, speed=0.2):
         theta, phi = self.dragonfly_heading
         dx = speed * np.sin(theta) * np.cos(phi)
         dy = speed * np.sin(theta) * np.sin(phi)
@@ -165,6 +183,17 @@ class Scenario:
         self.dragonfly_pos += movement_vector
         self.dragonfly_trajectory = np.vstack([self.dragonfly_trajectory, self.dragonfly_pos])
         self.time += 1
+
+        # turn
+        fov = calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time])
+        past_fov = calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time-1])
+        fov = fov + (fov - past_fov)  # add a little bit of memory
+        self.change_heading(self.brain(fov))
+
+        # prey finished
+        if self.time >= len(self.prey_trajectory):
+            print("Failstate: Prey escaped.")
+            return False
 
         # Check for failstate (out of bounds)
         if np.any(self.dragonfly_pos < 0) or np.any(self.dragonfly_pos > 5):
@@ -211,41 +240,45 @@ class Scenario:
         phi = (phi + angle) % (2 * np.pi)
         self.dragonfly_heading = np.array([theta, phi])
         
-    def plot_scenario_anim(self, brain=None):
+    def plot_scenario(self):
         fig = plt.figure(figsize=(15, 8))
         ax3d = fig.add_subplot(121, projection='3d')
         ax2d = fig.add_subplot(122)
         
         def update(frame):
-            ax3d.clear()
-            ax2d.clear()
             result = self.timestep()
             if result is not None:
                 ani.event_source.stop()
+                plot_final_state()
                 return
-            self.change_heading(self.brain(calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time])))
+            
+            plot_current_state()
+        
+        def plot_current_state():
+            ax3d.clear()
+            ax2d.clear()
             
             # Scatter plot for dragonfly trajectory
-            ax3d.scatter(self.dragonfly_trajectory[:, 0], self.dragonfly_trajectory[:, 1], self.dragonfly_trajectory[:, 2], color='lightcoral', s=10, label='Dragonfly Trajectory')
+            ax3d.scatter(self.dragonfly_trajectory[:, 0], self.dragonfly_trajectory[:, 1], self.dragonfly_trajectory[:, 2], color='thistle', s=10, label='Dragonfly Trajectory')
             
             # Scatter plot for prey trajectory
-            ax3d.scatter(self.prey_trajectory[:self.time+1, 0], self.prey_trajectory[:self.time+1, 1], self.prey_trajectory[:self.time+1, 2], color='gray', s=10, label='Prey Trajectory')
+            ax3d.scatter(self.prey_trajectory[:self.time+1, 0], self.prey_trajectory[:self.time+1, 1], self.prey_trajectory[:self.time+1, 2], color='lightgreen', s=10, label='Prey Trajectory')
             
             # Scatter plot for current positions
-            ax3d.scatter(self.dragonfly_pos[0], self.dragonfly_pos[1], self.dragonfly_pos[2], color='orangered', s=50, label=f'Dragonfly Position ({self.dragonfly_pos[0]:.2f}, {self.dragonfly_pos[1]:.2f}, {self.dragonfly_pos[2]:.2f})')
-            ax3d.scatter(self.prey_trajectory[self.time, 0], self.prey_trajectory[self.time, 1], self.prey_trajectory[self.time, 2], color='black', s=25, label=f'Prey Position ({self.prey_trajectory[self.time, 0]:.2f}, {self.prey_trajectory[self.time, 1]:.2f}, {self.prey_trajectory[self.time, 2]:.2f})')
+            ax3d.scatter(self.dragonfly_pos[0], self.dragonfly_pos[1], self.dragonfly_pos[2], color='darkorchid', s=50, label=f'Dragonfly Position ({self.dragonfly_pos[0]:.2f}, {self.dragonfly_pos[1]:.2f}, {self.dragonfly_pos[2]:.2f})')
+            ax3d.scatter(self.prey_trajectory[self.time, 0], self.prey_trajectory[self.time, 1], self.prey_trajectory[self.time, 2], color='forestgreen', s=25, label=f'Prey Position ({self.prey_trajectory[self.time, 0]:.2f}, {self.prey_trajectory[self.time, 1]:.2f}, {self.prey_trajectory[self.time, 2]:.2f})')
             
             # Line between dragonfly and prey
             line_x = [self.dragonfly_pos[0], self.prey_trajectory[self.time, 0]]
             line_y = [self.dragonfly_pos[1], self.prey_trajectory[self.time, 1]]
             line_z = [self.dragonfly_pos[2], self.prey_trajectory[self.time, 2]]
-            ax3d.plot(line_x, line_y, line_z, color='purple', label=f'Distance: {np.linalg.norm(self.dragonfly_pos - self.prey_trajectory[self.time]):.2f} m')
+            ax3d.plot(line_x, line_y, line_z, color='lightcoral', label=f'Distance: {np.linalg.norm(self.dragonfly_pos - self.prey_trajectory[self.time]):.2f} m')
 
             theta, phi = self.dragonfly_heading
             dx = np.sin(theta) * np.cos(phi)
             dy = np.sin(theta) * np.sin(phi)
             dz = np.cos(theta)
-            ax3d.quiver(self.dragonfly_pos[0], self.dragonfly_pos[1], self.dragonfly_pos[2], dx, dy, dz, length=0.5, color='orangered')
+            ax3d.quiver(self.dragonfly_pos[0], self.dragonfly_pos[1], self.dragonfly_pos[2], dx, dy, dz, length=0.5, color='darkorchid')
             
             ax3d.set_xlim(0, 5)
             ax3d.set_ylim(0, 5)
@@ -262,6 +295,10 @@ class Scenario:
             ax2d.set_title('Dragonfly FOV')
             ax2d.set_xlabel('Phi')
             ax2d.set_ylabel('Theta')
+        
+        def plot_final_state():
+            plot_current_state()
+            plt.draw()
         
         ani = FuncAnimation(fig, update, frames=range(50), repeat=False)
         plt.show()
@@ -282,7 +319,7 @@ if __name__ == "__main__":
     
     # Create scenario
     scenario = Scenario(prey_traj, initial_pos, initial_heading)
-    scenario.plot_scenario_anim()
+    scenario.plot_scenario()
     
     # Run and plot several time steps
     # for _ in range(100):
