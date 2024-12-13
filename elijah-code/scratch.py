@@ -1,14 +1,18 @@
 import numpy as np
 import random as rd
+import os
 import matplotlib.pyplot as plt
+from datetime import datetime as dt
 from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.animation import FuncAnimation
+from matplotlib.animation import FuncAnimation, PillowWriter
 
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = ['Times New Roman']
 
 # Constants
 NOISE = 0.05
+
+
 
 # helper functions:
 def generate_prey_trajectory(type='linear', start=None, length=4, max_bounds=5, numsize = 50):
@@ -59,6 +63,23 @@ def generate_prey_trajectory(type='linear', start=None, length=4, max_bounds=5, 
     
     return prey_trajectory
 
+def generate_dragonfly_initial_state(prey_position):
+    """
+    Generate a random initial state for the dragonfly.
+    
+    Parameters:
+    - prey_position: numpy array of shape (3,) with prey's current position
+    
+    Returns:
+    - initial_pos: numpy array of shape (3,) with initial dragonfly position
+    - initial_heading: numpy array of shape (2,) with heading angles (theta, phi) in radians
+    """
+
+    initial_pos = np.random.uniform(0, 5, size=3)
+    initial_heading = np.array([np.pi/4, np.pi/4])  # 45-degree angles
+    return initial_pos, initial_heading
+
+
 def calculate_fov(dragonfly_heading, dragonfly_pos, prey_pos, fov_size=21, fov_angle=np.pi):
     """
     Calculate the dragonfly's field of view (FOV).
@@ -97,7 +118,7 @@ def calculate_fov(dragonfly_heading, dragonfly_pos, prey_pos, fov_size=21, fov_a
         j_center = int((delta_phi + fov_angle / 2) / fov_angle * (fov_size - 1))
         
         # Determine intensity based on distance
-        intensity = max(0.1, min(1, 1 - (r / 5)))
+        intensity = max(0.5, min(1, 1 - (r / 5)))
         
         # Spread the intensity across multiple indices
         spread = max(1, int((1 - r / 5) * (fov_size // 4)))
@@ -173,8 +194,11 @@ class Scenario:
         
         # Initialize dragonfly trajectory with starting position
         self.dragonfly_trajectory = np.array([initial_dragonfly_pos])
-    
+
     def timestep(self, speed=0.2):
+        if self.time >= len(self.prey_trajectory):
+            return "end"
+        
         theta, phi = self.dragonfly_heading
         dx = speed * np.sin(theta) * np.cos(phi)
         dy = speed * np.sin(theta) * np.sin(phi)
@@ -187,7 +211,7 @@ class Scenario:
         # turn
         fov = calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time])
         past_fov = calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time-1])
-        fov = fov + (fov - past_fov)  # add a little bit of memory
+        fov = fov + (past_fov * 0.2)  # add a little bit of memory
         self.change_heading(self.brain(fov))
 
         # prey finished
@@ -202,12 +226,12 @@ class Scenario:
 
         # Check for win state (within 0.1 units of prey)
         distance_to_prey = np.linalg.norm(self.dragonfly_pos - self.prey_trajectory[self.time])
-        if distance_to_prey < 0.1:
+        if distance_to_prey < 0.2:
             print("Win state: Dragonfly caught the prey.")
             return True
         
         return None
-    
+
     # controls
     def change_heading(self, pitch_yaw_tuple):
         pitch, yaw = pitch_yaw_tuple
@@ -240,14 +264,14 @@ class Scenario:
         phi = (phi + angle) % (2 * np.pi)
         self.dragonfly_heading = np.array([theta, phi])
         
-    def plot_scenario(self):
+    def plot_scenario(self, save=False):
         fig = plt.figure(figsize=(15, 8))
         ax3d = fig.add_subplot(121, projection='3d')
         ax2d = fig.add_subplot(122)
         
         def update(frame):
             result = self.timestep()
-            if result is not None:
+            if result == "end" or result is not None:
                 ani.event_source.stop()
                 plot_final_state()
                 return
@@ -301,7 +325,15 @@ class Scenario:
             plt.draw()
         
         ani = FuncAnimation(fig, update, frames=range(50), repeat=False)
-        plt.show()
+
+        if save:
+            output_dir = "scenario_out_3d"
+            os.makedirs(output_dir, exist_ok=True)
+            current_time = dt.now().strftime("%Y%m%d_%H%M%S")
+            gif_path = os.path.join(output_dir, f"animation_{current_time}.gif")
+            ani.save(gif_path, writer=PillowWriter(fps=10))
+
+        plt.show() 
 
 # Example usage:
 if __name__ == "__main__":
@@ -319,7 +351,7 @@ if __name__ == "__main__":
     
     # Create scenario
     scenario = Scenario(prey_traj, initial_pos, initial_heading)
-    scenario.plot_scenario()
+    scenario.plot_scenario(save=False)
     
     # Run and plot several time steps
     # for _ in range(100):
