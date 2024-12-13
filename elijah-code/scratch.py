@@ -173,6 +173,110 @@ def brain_classic_direct(fov):
     
     return (pitch, yaw)
 
+def brain_offset_prev(fov, prev_fov=None):
+    """
+    Determine the pitch and yaw adjustments to predict prey movement.
+    
+    Parameters:
+    - fov: 2D numpy array representing the current field of view
+    - prev_fov: 2D numpy array representing the previous field of view (optional)
+    
+    Returns:
+    - (pitch, yaw): tuple where pitch and yaw are either 1, 0, or -1
+    """
+    fov_size = fov.shape[0]
+    center = fov_size // 2
+    
+    # Find the indices of the maximum value in the current FOV
+    max_index = np.unravel_index(np.argmax(fov), fov.shape)
+    max_i, max_j = max_index
+    
+    # If previous FOV is provided, calculate movement prediction
+    if prev_fov is not None:
+        prev_max_index = np.unravel_index(np.argmax(prev_fov), prev_fov.shape)
+        prev_i, prev_j = prev_max_index
+        
+        # Predict movement direction
+        i_delta = max_i - prev_i
+        j_delta = max_j - prev_j
+        
+        # Predict next position with some anticipation
+        predicted_i = max_i + i_delta
+        predicted_j = max_j + j_delta
+        
+        # Determine pitch adjustment based on predicted position
+        if predicted_i < center - fov_size * 0.1:
+            pitch = -1
+        elif predicted_i > center + fov_size * 0.1:
+            pitch = 1
+        else:
+            pitch = 0
+        
+        # Determine yaw adjustment based on predicted position
+        if predicted_j < center - fov_size * 0.1:
+            yaw = -1
+        elif predicted_j > center + fov_size * 0.1:
+            yaw = 1
+        else:
+            yaw = 0
+    
+    else:
+        # If no previous FOV, use current FOV position
+        if max_i < center - fov_size * 0.1:
+            pitch = -1
+        elif max_i > center + fov_size * 0.1:
+            pitch = 1
+        else:
+            pitch = 0
+        
+        if max_j < center - fov_size * 0.1:
+            yaw = -1
+        elif max_j > center + fov_size * 0.1:
+            yaw = 1
+        else:
+            yaw = 0
+    
+    return (pitch, yaw)
+
+def brain_offset(fov):
+    """
+    Determine the pitch and yaw adjustments to center the largest index in the FOV.
+    
+    Parameters:
+    - fov: 2D numpy array representing the field of view
+    
+    Returns:
+    - (pitch, yaw): tuple where pitch and yaw are either 1, 0, or -1
+    """
+    fov_size = fov.shape[0]
+    center = fov_size // 2
+    
+    # Find the indices of the maximum value in the FOV
+    max_index = np.unravel_index(np.argmax(fov), fov.shape)
+    max_i, max_j = max_index
+    
+    # Calculate offset from center
+    pitch_offset = max_i - center
+    yaw_offset = max_j - center
+    
+    # Determine pitch adjustment with a threshold
+    if pitch_offset < -fov_size * 0.1:  # 10% threshold
+        pitch = -1
+    elif pitch_offset > fov_size * 0.1:
+        pitch = 1
+    else:
+        pitch = 0
+    
+    # Determine yaw adjustment with a threshold
+    if yaw_offset < -fov_size * 0.1:
+        yaw = -1
+    elif yaw_offset > fov_size * 0.1:
+        yaw = 1
+    else:
+        yaw = 0
+    
+    return (pitch, yaw)
+
 class Scenario:
     def __init__(self, prey_trajectory, initial_dragonfly_pos, initial_dragonfly_heading, brain=brain_classic_direct):
         """
@@ -194,7 +298,7 @@ class Scenario:
         
         # Initialize dragonfly trajectory with starting position
         self.dragonfly_trajectory = np.array([initial_dragonfly_pos])
-
+    
     def timestep(self, speed=0.2):
         if self.time >= len(self.prey_trajectory):
             return "end"
@@ -212,7 +316,10 @@ class Scenario:
         fov = calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time])
         past_fov = calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time-1])
         fov = fov + (past_fov * 0.2)  # add a little bit of memory
-        self.change_heading(self.brain(fov))
+        if self.brain == brain_offset_prev:
+            self.change_heading(self.brain(fov, past_fov))
+        else:
+            self.change_heading(self.brain(fov))
 
         # prey finished
         if self.time >= len(self.prey_trajectory):
@@ -352,7 +459,24 @@ if __name__ == "__main__":
     # Create scenario
     scenario = Scenario(prey_traj, initial_pos, initial_heading)
     scenario.plot_scenario(save=False)
+        
+    prey_traj = generate_prey_trajectory(type="parabolic")
     
+    # Initial dragonfly position and heading
+    initial_pos = np.array([0, 0, 0], dtype=np.float64)
+    initial_heading = np.array([np.pi/4, np.pi/4])  # 45-degree angles
+
+    scenario = Scenario(prey_traj, initial_pos, initial_heading, brain=brain_offset_prev)
+    scenario.plot_scenario(save=False)
+
+    prey_traj = generate_prey_trajectory(type="parabolic")
+    
+    # Initial dragonfly position and heading
+    initial_pos = np.array([0, 0, 0], dtype=np.float64)
+    initial_heading = np.array([np.pi/4, np.pi/4])  # 45-degree angles
+
+    scenario = Scenario(prey_traj, initial_pos, initial_heading, brain=brain_offset)
+    scenario.plot_scenario(save=False)    
     # Run and plot several time steps
     # for _ in range(100):
     #     state = scenario.timestep()
