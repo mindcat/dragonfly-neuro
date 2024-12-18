@@ -159,7 +159,7 @@ The current approach of a constant speed and discrete turn steps, mimicking Dr. 
 
 On silicon inferencing greatly outperforms even the M1 Max chip runnng the non-quantized models, and with no loss in accuracy. In fact, the 13 millisecond average decision times actually outpace the 30-50 ms reaction times of dragonflies. This is still dwarfed by the speed of the classical approach, which computes in fractions of a millisecond. Although the several magnitudes of processing speed lost may seem a poor exchange for a 0.08 increase, we believe that we are far from the limits of the neural network, especially as we move beyond relying on the classical control algorithms for training data. 
 
-![Missed Scenario](https://github.com/mindcat/dragonfly-neuro/elijah-code/scenario_out_3d/miss.png)
+![Missed Scenario](https://github.com/mindcat/dragonfly-neuro/blob/3a5b08582b5b250136ac60d0a5d8d342a9286eb7/elijah-code/scenario_out_3d/miss.png)
 *Figure 4: Dragonfly on orthogonal approach misses prey, meandering off guided by noise.*
 
 --- 
@@ -179,10 +179,7 @@ The success of our dragonfly pursuit models corroborates Dr. Chance's research a
 # Gallery
 
 ![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/animation.gif)
-![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
-![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
-![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
-![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
-![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
-![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
-![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/elijah-code/scenario_out_3d/animation_20241213_115623.gif)
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/animation_20241212_231825.gif)
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/animation_20241212_231825.gif)
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/animation_20241213_110307.gif)
