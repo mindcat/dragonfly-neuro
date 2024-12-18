@@ -140,3 +140,49 @@ This table provides an overview of a subset of our approaches and their outcomes
 The results of the on-chip neuromorphic inferencing are ideal and further evidence the value of this project. 13.42 ms is a decision time that makes real-time navigation on device not just feasible, but currently implementable. It does this while losing no performance capabilities quantized to 8 bits and comfortably fitting on the AKD1000. These are very compelling results considering how little we have optimized the models for that silicon, coming from a training infrastructure based on Dr. Chances research and for the most part developed without special considerations for the AKD1000. 
 
 Comparing `algo_trained_final` and `algo_trained` provides a very clear example of overfitting. The `rand_final` model puts into perspective how intelligent and successful even relatively uncompetitive algorithms like our offset fov approach are, which was an attempt at replicating Dr. Chances second layer of neurons that enabled offset targeting, which allows predictive instead of pursuit interceptions. Unfortunately, our non-neural approach significantly outperforms the direct pursuit algorithm 25% of the time (This isn't a coincidence, just a result of the number of cardinal directions) and significantly underperforms 75% of the time.
+
+### AKD1000 Efficiency
+```text
+Average framerate = 76.25 fps
+Last inference power range (mW):  Avg 1027.20 / Min 915.00 / Max 1142.30 / Std 192.65
+Last inference energy consumed (mJ/frame): 13.25
+```
+The efficiency we can see in the AKD1000 running our quantized and converted model is impressive, especially considering it is outperforming a far larger, more expensive, and less efficient M1 Max chip 13.25 to 59.42 ms. 
+
+---
+
+## Limitations
+
+The assumption of time independence also oversimplifies biological systems that rely on temporal dynamics, such as spike timing in SNNs, such as the ones found in human neurons. This simplification significantly undermines the potential of the model's implementation in real-world situations as well as its competition with biology. It also limits the system to basic behaviors while neglecting advanced dynamics such as adaptive learning. Introducing complex multi-agent scenarios would not improve anything, considering that the framework would not be ideal. Without completely utilizing the hardware capabilities of the Akida, the translation of this concept to SNNs remains unclear.
+
+The current approach of a constant speed and discrete turn steps, mimicking Dr. Chance's research, must be optimized either for precision or speed in turning. Our current turning speed (In reality, the rotational translation per timestep) of $\frac{\pi}{12}$ allows the dragonfly adequate precision to aim for intercept accurately, but also prevents it from reacting quickly when the prey is near, and any orthogonal approaches risk the prey moving out of the dragonflies FOV faster than the dragonfly can turn to maintain that tracking, as seen in the below figure. Fixing this is potentially negligible- already, the outputs of the various model are being clipped and quantized in order to match the requirements of `change_heading()`. Obviously this doesn't work now (It was trained on a discretely turning slgorithm, after all), but the sole limit from repeating the same setup with floating point outputs is a non-NN brain that has useful floating point outputs. 
+
+On silicon inferencing greatly outperforms even the M1 Max chip runnng the non-quantized models, and with no loss in accuracy. In fact, the 13 millisecond average decision times actually outpace the 30-50 ms reaction times of dragonflies. This is still dwarfed by the speed of the classical approach, which computes in fractions of a millisecond. Although the several magnitudes of processing speed lost may seem a poor exchange for a 0.08 increase, we believe that we are far from the limits of the neural network, especially as we move beyond relying on the classical control algorithms for training data. 
+
+![Missed Scenario](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/miss.png)
+*Figure 4: Dragonfly on orthogonal approach misses prey, meandering off guided by noise.*
+
+--- 
+
+## Further Applications
+
+We want to solve for ideal interception trajectories between a given dragonfly starting state and a prey trajectory mathematically (without considering the FOV) based on a set limitation of the dragonfly's movement (Like, the 0.15 m per timestep and $\frac{\pi}{12}$ per timestep rules). This is trivially implemented with a backtracking algorithm, from which paired FOV's & motor responses could be produced to train a model independently of our control code. 
+
+The modular nature of our codebase provides us a number of directions in which to expand this research beyond gradual improvement of the current dragonfly model. Time-dependency, obstacle avoidance, floating point motor control, variable speed, independent training, and unpredictable prey trajectory are all alterations to our existing experiments we have considered and are interested in pursuing. 
+
+---
+
+## Conclusion
+
+The success of our dragonfly pursuit models corroborates Dr. Chance's research and extends her insights into on-chip applications, providing valuable evidence towards the feasibility of lightweight and efficient visual neuromorphic control systems for a variety of devices that navigate spatial environments. We established a strong foundation in the existing model and it's hardware implementation which leverages future research towards high efficiency spatial pursuit SNN. The success of our models are responsive to gradual improvement, and there are a number of unturned stones that could dramatically improve the performance and breadth of applications of our research. 
+
+# Gallery
+
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/animation.gif)
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
+![Animated Pursuit](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/)
