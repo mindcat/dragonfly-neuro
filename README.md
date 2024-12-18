@@ -1,5 +1,7 @@
 # Dragonfly Missile Command: Neuromorphic Controllers for Interception and Flight
 
+[nc.pdf](Read as PDF)
+
 ## Authors
 
 **M. Elijah Wangeman**  
@@ -28,6 +30,8 @@ Dragonflies are uniquely effective, intelligent, and efficient at navigating a 3
 
 Recent literature has become unusually interested in the mind of the common dragonfly. The dragonfly is a carnivorous insect that hunts and eats smaller insects. Zoological studies indicate that dragonflies catch approximately 95% of the prey they seek in the air - a remarkable success rate. This success rate is enabled by their speed and maneuverability, but also their impressive ability to chase prey on an intercepting trajectory, accurately predicting prey trajectory. Notably, they react to alterations in their prey's trajectory within 30-50 ms, demonstrating that a maximum of 3 layers of neurons is required for the dragonfly to make motor decisions while predicting the path of their prey.
 
+Anti-ballistic missile systems have long relied on complex, computationally expensive, mathematics to intercept flying projectiles. These missile systems, while advanced, require enormous resources to fire and then to apply advanced position correction algorithms on scarce integrated systems hardware.
+
 Drone interception is a more appropriate analogy to dragonfly interception. Unmanned Aerial Vehicles (UAVs) are rapidly advancing for a wide variety of applications. There is excellent potential for new, fast, power-efficient UAVs utilizing bioinspired, neuromorphic hardware systems.
 
 Applications extend beyond these examples; modern camera drones rely heavily on machine vision for tracking subjects, a computationally expensive effort that is consequential for battery-powered, range-limited consumer drones.
@@ -36,7 +40,11 @@ Applications extend beyond these examples; modern camera drones rely heavily on 
 
 ## Methodology
 
-Drones have limitations in weight, storage, and energy as these resources are sparse. Neuromorphic chip architecture permits reduced energy consumption and allows information storage using the time dimension. In our experiment, we use the AKD1000 chip, which is a neuromorphic processing chip developed by BrainChip Holdings. Unlike traditional GPUs, which rely on dense matrix operations, the AKD1000 processes sparse, event-driven data, making it much more efficient for real-world workloads. This approach not only reduces computational overhead but also aligns closely with the operation of the human brain, offering a pathway to more biologically inspired AI.
+Drones have limitations in weight, storage, and energy as these resources are sparse. Neuromorphic chip architecture permits reduced energy consumption and allows information storage using the time dimension. In our experiment, we use the AKD1000 chip, which is a neuromorphic processing chip developed by BrainChip Holdings. Unlike traditional GPUs, which rely on dense matrix operations, the AKD1000 processes sparse, event-driven data, making it much more efficient for real-world workloads. This approach not only reduces computational overhead but also aligns closely with the operation of the human brain, offering a pathway to more biologically inspired AI. The main reason to use the neuromorphic chip is its energy efficiency, which is crucial in edge devices such as UAVs.
+
+Dragonfly brains have some unique characteristics that make models of them more straightforward than might initially be expected. Distinct neural pathways exist directly between the eyes and wings of a dragonfly, seemingly bypassing it's central nervous system entirely. This is theorized to be responsible for their fast reaction times while chasing, and points towards a relatively simple but very fast neural network we have to simulate: only considering that one pathway, ignoring the rest of the dragonfly nervous system, but still having an intelligent navigation model.
+
+Dragonflies have some advantages, particularly in visual processing speed (200 hz) and a near 160$^\circ$ FOV (Which, in the interest of reasonable precision in tracking targets within a FOV, we are not replicating in our models). Research indicates, though, this comes at the cost of visual detail and depth perception. The lack of depth perception makes their trajectory predicting powers even more impressive, but also points to it not being a computationally complex 3D space trajectory solver, but instead some more novel (and, importantly, efficient) evolved approach of guaranteeing a collision course. 
 
 ### Neural Network
 
@@ -66,7 +74,9 @@ model.save('models/algo_trained_final.keras')
 ![Training Epochs](https://github.com/elijah-code/scenario_out_3d/training-epochs.png)
 *Figure 1: `algo_model` training that would have taken upwards of 3 hours per epoch on Google Colab.*
 
-The proposed neural network mimics a dragonfly's prey interception system with a unique approach to tracking and capturing prey. It consists of four dense layers. The first layer represents the dragonfly's visual field as a 21x21 square array. The second layer, with 194,481 neurons, encodes movement directions. The third layer aligns neurons with the prey's image, and the final layer outputs yaw and rotation.
+The proposed neural network mimics a dragonfly's prey interception system with a unique approach to tracking and capturing prey. It consists of four dense layers presented in the code snippet above. The first layer consists of 441 neurons representing the dragonfly's visual field, arranged in a 21 by 21 square array. This layer captures the prey's location within the dragonfly's field of view. In the second layer, we used $21^4$ (194481) neurons for the creation of the movement directions. A third set of 441 neurons hypothetically helps determine which neurons should be aligned with the prey's image. The final layer consists of 2 neurons that output yaw and rotation.
+
+The network is first setup as an artificial neural network and then converted into the spiking neural network using Keras conversion function. 
 
 ### Keras Model to Akida SNN
 
@@ -106,7 +116,7 @@ class Scenario:
         self.dragonfly_trajectory = np.array([initial_dragonfly_pos])
 ```
 
-We generate linear and parabolic prey trajectories for testing the algorithm in 3D space. From a predefined initial point, we generate each step of the dragonfly using our algorithm. The field of view is set up as a 2D space with a width and height of 21 pixels.
+We generate linear and parabolical prey trajectories for testing the algorithm in 3D space. From a predefined initial point, we generate each step of the dragonfly using our algorithm. In the first state, we rotate the dragonfly such that its field of view captures the prey position. The main idea is to place the prey approximately in the center of its visual field. The field of view is set up to be a 2D space with a width and height of 21 pixels.
 
 ![Dragonfly Perspective](https://github.com/elijah-code/scenario_out_3d/fov.png)
 *Figure 2: The dragonfly perspective computed from dragonfly and prey location and dragonfly heading.*
