@@ -71,7 +71,7 @@ model.fit(X, y, epochs=10, batch_size=32, validation_split=0.2, callbacks=[check
 model.save('models/algo_trained_final.keras')
 ```
 
-![Training Epochs](https://github.com/elijah-code/scenario_out_3d/training-epochs.png)
+![Training Epochs](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/training-epochs.png)
 *Figure 1: `algo_model` training that would have taken upwards of 3 hours per epoch on Google Colab.*
 
 The proposed neural network mimics a dragonfly's prey interception system with a unique approach to tracking and capturing prey. It consists of four dense layers presented in the code snippet above. The first layer consists of 441 neurons representing the dragonfly's visual field, arranged in a 21 by 21 square array. This layer captures the prey's location within the dragonfly's field of view. In the second layer, we used $21^4$ (194481) neurons for the creation of the movement directions. A third set of 441 neurons hypothetically helps determine which neurons should be aligned with the prey's image. The final layer consists of 2 neurons that output yaw and rotation.
