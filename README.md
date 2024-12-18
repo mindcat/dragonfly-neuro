@@ -1,6 +1,6 @@
 # Dragonfly Missile Command: Neuromorphic Controllers for Interception and Flight
 
-[nc.pdf](Read as PDF)
+[Read as PDF](nc.pdf)
 
 ## Authors
 
