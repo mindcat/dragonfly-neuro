@@ -1,0 +1,544 @@
+algo_trained_final:
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Traceback (most recent call last):
+  File "/Users/mew/rit/sem9/CMPE-789/dragonfly-neuro/elijah-code/dragonfly.py", line 581, in <module>
+    win, fail = scenario.count_win_fail_states(100)
+    ^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+(.dragonfly-keras) ?1 mew->CMPE-789/dragonfly-neuro/elijah-code ☪›py dragonfly.py                                             ☭ 22:46:11
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Keras model:
+Win count: 61
+Fail count: 39
+Average decision time: 0.07052 seconds
+
+
+
+
+
+
+
+
+
+
+
+algo_trained:
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Keras model:
+Win count: 68
+Fail count: 32
+Average decision time: 0.059425917 seconds
+
+
+
+
+
+
+offset:
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Keras model:
+Win count: 39
+Fail count: 61
+Average decision time: 0.000006106 seconds
+(.dragonfly-keras) √ mew->CMPE-789/dragonfly-neuro/elijah-code ☪›py dragonfly.py                                                                           ☭ 23:51:33
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Keras model:
+Win count: 46
+Fail count: 54
+Average decision time: 0.000006600 seconds
+
+
+
+
+
+
+classic:
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Failstate: Dragonfly went out of bounds.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Win state: Dragonfly caught the prey.
+Keras model:
+Win count: 72
+Fail count: 28
+Average decision time: 0.000003344 seconds
