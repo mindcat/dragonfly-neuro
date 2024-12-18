@@ -118,7 +118,7 @@ class Scenario:
 
 We generate linear and parabolical prey trajectories for testing the algorithm in 3D space. From a predefined initial point, we generate each step of the dragonfly using our algorithm. In the first state, we rotate the dragonfly such that its field of view captures the prey position. The main idea is to place the prey approximately in the center of its visual field. The field of view is set up to be a 2D space with a width and height of 21 pixels.
 
-![Dragonfly Perspective](https://github.com/elijah-code/scenario_out_3d/fov.png)
+![Dragonfly Perspective](https://github.com/mindcat/dragonfly-neuro/blob/84c9569f666385888ac30234e1b2da6c91462007/elijah-code/scenario_out_3d/fov.png)
 *Figure 2: The dragonfly perspective computed from dragonfly and prey location and dragonfly heading.*
 
 ---
