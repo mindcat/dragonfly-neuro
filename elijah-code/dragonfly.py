@@ -1,6 +1,7 @@
 import numpy as np
 import random as rd
 import os
+import time
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import load_model
 from datetime import datetime as dt
@@ -12,7 +13,7 @@ plt.rcParams['font.serif'] = ['Times New Roman']
 
 # Constants
 model_rand = load_model('models/rand_final.keras')
-model_algo = load_model('models/algo_trained_final.keras')
+model_algo = load_model('models/algo_trained.keras')
 
 # ALTER AT WISH
 MODEL = model_algo
@@ -22,7 +23,7 @@ NOISE = 0.05
 
 
 # helper functions:
-def generate_prey_trajectory(type='linear', start=None, length=4, max_bounds=5, numsize = 50):
+def generate_prey_trajectory(type='linear', start=None, length=4, max_bounds=5, numsize=50):
     """
     Generate a prey trajectory.
     
@@ -49,13 +50,35 @@ def generate_prey_trajectory(type='linear', start=None, length=4, max_bounds=5, 
                 prey_trajectory = np.linspace(start, end, numsize)
             
             elif type == 'parabolic':
+                # Generate a true 3D parabolic trajectory
                 t = np.linspace(0, 1, numsize)
+                
+                # Random direction for trajectory
                 direction = np.random.uniform(-1, 1, size=3)
-                direction /= np.linalg.norm(direction)  # Normalize direction
-                end = start + direction * length
-                end = np.clip(end, 0, max_bounds)
-                a = (end - start) / (t[-1]**2)
-                prey_trajectory = start + a * t[:, np.newaxis]**2
+                direction /= np.linalg.norm(direction)
+                
+                # Perpendicular vector for curvature
+                perp1 = np.cross(direction, [1, 0, 0])
+                if np.linalg.norm(perp1) < 1e-10:
+                    perp1 = np.cross(direction, [0, 1, 0])
+                perp1 /= np.linalg.norm(perp1)
+                
+                perp2 = np.cross(direction, perp1)
+                perp2 /= np.linalg.norm(perp2)
+                
+                # Parabolic curve parameters
+                a = 0.5  # Curvature factor
+                
+                # Generate 3D parabolic trajectory
+                prey_trajectory = (
+                    start[np.newaxis, :] +  # Starting point
+                    length * t[:, np.newaxis] * direction +  # Linear component
+                    a * length * (t[:, np.newaxis]**2 - t[:, np.newaxis]) * perp1 +  # Parabolic curve in first perpendicular plane
+                    0.5 * a * length * (t[:, np.newaxis]**2 - t[:, np.newaxis]) * perp2  # Slight variation in second perpendicular plane
+                )
+                
+                # Clip to max bounds
+                prey_trajectory = np.clip(prey_trajectory, 0, max_bounds)
             
             # Ensure the trajectory is within bounds and at least 3 meters in length
             distances = np.linalg.norm(np.diff(prey_trajectory, axis=0), axis=1)
@@ -315,7 +338,7 @@ class Scenario:
         self.dragonfly_trajectory = np.vstack([self.dragonfly_trajectory, self.dragonfly_pos])
         self.time += 1
         if self.time >= len(self.prey_trajectory):
-            return "end"
+            return "end", 0
 
         # turn
         fov = calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time])
@@ -329,25 +352,29 @@ class Scenario:
             past_fov = calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time-1])
             past_fov += calculate_fov(self.dragonfly_heading, self.dragonfly_pos, self.prey_trajectory[self.time-2])
             fov = fov + (past_fov * 0.2)  # add a little bit of memory
-        self.change_heading(self.brain(fov))
+        start_time = time.time()
+        decision = self.brain(fov)
+        end_time = time.time()
+        self.change_heading(decision)
+        duration = end_time - start_time
 
         # prey finished
         if self.time >= len(self.prey_trajectory):
             print("Failstate: Prey escaped.")
-            return False
+            return False, duration
 
         # Check for failstate (out of bounds)
         if np.any(self.dragonfly_pos < 0) or np.any(self.dragonfly_pos > 5):
             print("Failstate: Dragonfly went out of bounds.")
-            return False
+            return False, duration
 
         # Check for win state (within 0.1 units of prey)
         distance_to_prey = np.linalg.norm(self.dragonfly_pos - self.prey_trajectory[self.time])
         if distance_to_prey < 0.2:
             print("Win state: Dragonfly caught the prey.")
-            return True
+            return True, duration
         
-        return None
+        return None, duration
 
     # controls
     def change_heading(self, pitch_yaw_tuple):
@@ -387,7 +414,7 @@ class Scenario:
         ax2d = fig.add_subplot(122)
         
         def update(frame):
-            result = self.timestep()
+            result, duration = self.timestep()
             if result == "end" or result is not None:
                 ani.event_source.stop()
                 plot_final_state()
@@ -478,7 +505,7 @@ class Scenario:
             temp_y = []
             
             while True:
-                result = self.timestep()
+                result, duration = self.timestep()
                 if result == True:
                     X.extend(temp_x)
                     y.extend(temp_y)
@@ -517,6 +544,8 @@ class Scenario:
         """
         win_count = 0
         fail_count = 0
+        decision_count = 0
+        avg_timestep = 0
         
         for _ in range(num_samples):
             # Reset the scenario
@@ -527,7 +556,10 @@ class Scenario:
             self.dragonfly_trajectory = np.array([self.dragonfly_pos])
             
             while True:
-                result = self.timestep()
+                result, duration = self.timestep()
+                if duration > 0:
+                    decision_count += 1
+                    avg_timestep += duration
                 if result == True:
                     win_count += 1
                     break
@@ -535,7 +567,7 @@ class Scenario:
                     fail_count += 1
                     break
         
-        return win_count, fail_count
+        return win_count, fail_count, avg_timestep/decision_count
 
 # Example usage:
 if __name__ == "__main__":
@@ -558,8 +590,8 @@ if __name__ == "__main__":
     # scenario.plot_scenario(save=False)
 
     # Create scenario neural
-    scenario = Scenario(prey_traj, initial_pos, initial_heading, brain=brain_keras)
-    scenario.plot_scenario(save=False)
+    # scenario = Scenario(prey_traj, initial_pos, initial_heading, brain=brain_keras)
+    # scenario.plot_scenario(save=False)
 
     # win, fail = scenario.count_win_fail_states(100)
     # print("Normal algo:")
@@ -567,12 +599,16 @@ if __name__ == "__main__":
     # print(f"Fail count: {fail}")
 
 
-    # scenario = Scenario(prey_traj, initial_pos, initial_heading, brain=brain_keras)
-    # win, fail = scenario.count_win_fail_states(100)
+    scenario = Scenario(prey_traj, initial_pos, initial_heading, brain=brain_keras)
+    scenario.plot_scenario(save=False)
+    # win, fail, avg_timestep = scenario.count_win_fail_states(100)
 
     # print("Keras model:")
     # print(f"Win count: {win}")
     # print(f"Fail count: {fail}")
+    # print(f"Average decision time: {avg_timestep:.9f} seconds")
+
+
 
     # train:
     # X, y = scenario.generate_training_data(1000)
