@@ -8,18 +8,22 @@ from datetime import datetime as dt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.animation import FuncAnimation, PillowWriter
 
+# from akida import Model, Core
+# import akida_models
+
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = ['Times New Roman']
 
 # Constants
+# akida_model = Model("path_to_your_akida_model.fbz")
+# core = Core()
+# core.load_model(akida_model)
 model_rand = load_model('models/rand_final.keras')
 model_algo = load_model('models/algo_trained.keras')
 
 # ALTER AT WISH
-MODEL = model_algo
+MODEL = model_rand
 NOISE = 0.05
-
-
 
 
 # helper functions:
@@ -290,7 +294,7 @@ def brain_keras(fov):
     fov = np.expand_dims(fov, axis=-1)  # Add channel dimension
     
     # Predict the pitch and yaw adjustments
-    prediction = MODEL.predict(fov)
+    prediction = MODEL.predict(fov, verbose=0)
     
     # Unpack the prediction
     pitch, yaw = prediction[0]
@@ -304,6 +308,24 @@ def brain_keras(fov):
     yaw = np.clip(yaw, -1, 1)
     
     return (pitch, yaw)
+
+# def brain_akida(fov):
+#     fov = np.expand_dims(fov, axis=0)
+#     fov = np.expand_dims(fov, axis=-1)  # Add channel dimension
+    
+#     prediction = core.infer(fov)
+
+#     pitch, yaw = prediction[0]
+    
+#     # Convert to -1, 0, or 1
+#     pitch = int(np.round(pitch))
+#     yaw = int(np.round(yaw))
+    
+#     # Ensure pitch and yaw are within the range [-1, 0, 1]
+#     pitch = np.clip(pitch, -1, 1)
+#     yaw = np.clip(yaw, -1, 1)
+    
+#     return (pitch, yaw)
 
 class Scenario:
     def __init__(self, prey_trajectory, initial_dragonfly_pos, initial_dragonfly_heading, brain=brain_classic_direct):
@@ -327,7 +349,7 @@ class Scenario:
         # Initialize dragonfly trajectory with starting position
         self.dragonfly_trajectory = np.array([initial_dragonfly_pos])
 
-    def timestep(self, speed=0.15):
+    def timestep(self, speed=0.2):
         
         theta, phi = self.dragonfly_heading
         dx = speed * np.sin(theta) * np.cos(phi)
@@ -599,11 +621,11 @@ if __name__ == "__main__":
     # print(f"Fail count: {fail}")
 
 
-    scenario = Scenario(prey_traj, initial_pos, initial_heading, brain=brain_keras)
+    scenario = Scenario(prey_traj, initial_pos, initial_heading)
     scenario.plot_scenario(save=False)
     # win, fail, avg_timestep = scenario.count_win_fail_states(100)
 
-    # print("Keras model:")
+    # print("Rand model:")
     # print(f"Win count: {win}")
     # print(f"Fail count: {fail}")
     # print(f"Average decision time: {avg_timestep:.9f} seconds")

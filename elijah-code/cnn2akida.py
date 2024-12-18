@@ -1,4 +1,4 @@
-import akida
+# import akida
 import numpy as np
 import keras
 from quantizeml.models import quantize, QuantizationParams
@@ -13,4 +13,4 @@ model_quantized.summary()
 model_akida = convert(model_quantized)
 model_akida.summary()
 
-model_akida.save('models/algo_trained_akida.keras')
+model_akida.save('models/algo_trained_akida.fbz')

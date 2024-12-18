@@ -5,16 +5,17 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Reshape, Input
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.models import load_model
 
 # Constants
 FOV_SIZE = 21
 NUM_SAMPLES = 10000
 
 # Generate synthetic dataset
-def generate_synthetic_data(num_samples, fov_size):
-    X = np.random.rand(num_samples, fov_size, fov_size, 1)  # Random FOVs
-    y = np.random.randint(-1, 2, size=(num_samples, 2))  # Random pitch and yaw adjustments (-1, 0, 1)
-    return X, y
+# def generate_synthetic_data(num_samples, fov_size):
+#     X = np.random.rand(num_samples, fov_size, fov_size, 1)  # Random FOVs
+#     y = np.random.randint(-1, 2, size=(num_samples, 2))  # Random pitch and yaw adjustments (-1, 0, 1)
+#     return X, y
 
 # Generate dataset
 # X, y = generate_synthetic_data(NUM_SAMPLES, FOV_SIZE)
@@ -42,7 +43,9 @@ checkpoint = ModelCheckpoint('models/algo_trained.keras', monitor='val_loss', sa
 # Train the model
 model.fit(X, y, epochs=10, batch_size=32, validation_split=0.2, callbacks=[checkpoint])
 
-# Save the final model
-model.save('models/algo_trained_final.keras')
+# model = load_model('models/algo_trained.keras')
 
-print("Model training complete and saved as 'models/dragonfly_model.keras' and 'models/dragonfly_model_final.keras'")
+# Save the final model
+model.save('models/algo_trained.h5')
+
+# print("Model training complete and saved as 'models/dragonfly_model.keras' and 'models/dragonfly_model_final.keras'")
